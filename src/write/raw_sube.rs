@@ -34,7 +34,7 @@ impl RawWriterSmallUnalignedBigEndian {
                 out.write(&[0; 4])?; // NEXT
                 out.write(&u16::to_be_bytes(format.data_id))?;
                 let name = str_to_bytes_unaligned_small(format.name.clone());
-                let name = if let Ok(ok) = name { ok } else { return Err(SPBFWriterWriteError::InvalidFormatNameLength.into()) };
+                let name = if let Ok(ok) = name { ok } else { return Err(SPBFWriterWriteError::InvalidDataFormatNameLength.into()) };
                 out.write(&name)?;
 
                 last_offset += 0x6 + name.len();

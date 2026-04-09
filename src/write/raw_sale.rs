@@ -34,7 +34,7 @@ impl RawWriterSmallAlignedLittleEndian {
                 next_write_addr = last_offset..last_offset + 0x4; // NEXT
 
                 out.write(&[0; 4])?; // NEXT
-                out.write(&u16::to_le_bytes(usize_to_u16(format.name.len(), SPBFWriterWriteError::InvalidFormatNameLength.into())?))?;
+                out.write(&u16::to_le_bytes(usize_to_u16(format.name.len(), SPBFWriterWriteError::InvalidDataFormatNameLength.into())?))?;
                 out.write(&u16::to_le_bytes(format.data_id))?;
                 let (name, name_align) = str_to_bytes_align_small(&format.name);
                 out.write(name)?;
