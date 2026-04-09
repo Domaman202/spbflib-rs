@@ -14,8 +14,8 @@ impl RawWriterSmallAlignedBigEndian {
         out.write(&u8::to_be_bytes(SPBFVersion::LAST_SUPPORTED.into()))?;
         out.write(&[0; 4])?; // FORMAT_ENTRY
         out.write(&[0; 4])?; // DATA_ENTRY
-        out.write(&u16::to_be_bytes(usize_to_u16(writer.build_name.len(), SPBFWriterWriteError::InvalidNameLength.into())?))?;
-        out.write(&u16::to_be_bytes(usize_to_u16(writer.build_version.len(), SPBFWriterWriteError::InvalidVersionLength.into())?))?;
+        out.write(&u16::to_be_bytes(usize_to_u16(writer.build_name.len(), SPBFWriterWriteError::InvalidBuildNameLength.into())?))?;
+        out.write(&u16::to_be_bytes(usize_to_u16(writer.build_version.len(), SPBFWriterWriteError::InvalidBuildVersionLength.into())?))?;
         let (name, name_align) = str_to_bytes_align_small(&writer.build_name);
         out.write(name)?;
         out.write(&vec![0; name_align])?;

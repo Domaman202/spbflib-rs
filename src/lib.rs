@@ -327,7 +327,7 @@ mod tests {
             .write(SPBFType::SmallAlignedLittleEndian, SPBFVersion::LAST_SUPPORTED)
             .unwrap_err();
         match err {
-            SPBFWriterError::Write(SPBFWriterWriteError::InvalidNameLength) => (),
+            SPBFWriterError::Write(SPBFWriterWriteError::InvalidBuildNameLength) => (),
             _ => panic!("expected InvalidNameLength"),
         }
     }

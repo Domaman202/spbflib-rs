@@ -49,10 +49,10 @@ pub enum SPBFWriterDataAddError {
 #[derive(Debug)]
 pub enum SPBFWriterWriteError {
     UnsupportedVersion,
-    InvalidNameLength,
-    InvalidNameString,
-    InvalidVersionLength,
-    InvalidVersionString,
+    InvalidBuildNameLength,
+    InvalidBuildNameString,
+    InvalidBuildVersionLength,
+    InvalidBuildVersionString,
     InvalidFormatNameLength,
     InvalidFormatNameString,
     InvalidDataNameLength,

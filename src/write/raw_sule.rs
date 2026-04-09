@@ -15,10 +15,10 @@ impl RawWriterSmallUnalignedLittleEndian {
         out.write(&[0; 4])?; // FORMAT_ENTRY
         out.write(&[0; 4])?; // DATA_ENTRY
         let name = str_to_bytes_unaligned_small(writer.build_name.clone());
-        let name = if let Ok(ok) = name { ok } else { return Err(SPBFWriterWriteError::InvalidNameString.into()) };
+        let name = if let Ok(ok) = name { ok } else { return Err(SPBFWriterWriteError::InvalidBuildNameString.into()) };
         out.write(&name)?;
         let version = str_to_bytes_unaligned_small(writer.build_version.clone());
-        let version = if let Ok(ok) = version { ok } else { return Err(SPBFWriterWriteError::InvalidVersionString.into()) };
+        let version = if let Ok(ok) = version { ok } else { return Err(SPBFWriterWriteError::InvalidBuildVersionString.into()) };
         out.write(&version)?;
 
         let mut last_offset = 0x10 + name.len() + version.len();
