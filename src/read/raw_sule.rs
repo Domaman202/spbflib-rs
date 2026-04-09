@@ -1,4 +1,4 @@
-use crate::read::{SPBFDataForRead, SPBFDataFormatForRead, SPBFReadResult, SPBFReader, SPBFReaderDataReadError, SPBFReaderError, SPBFReaderFormatReadError, SPBFReaderHeaderReadError };
+use crate::read::{SPBFDataForRead, SPBFDataFormatForRead, SPBFReadResult, SPBFReader, SPBFReaderDataReadError, SPBFReaderError, SPBFReaderDataFormatReadError, SPBFReaderHeaderReadError };
 use crate::{SPBFType, SPBFVersion};
 use std::ffi::CStr;
 
@@ -26,11 +26,11 @@ impl RawReaderSmallUnalignedLittleEndian {
         let build_version = build_version.to_string_lossy().into_owned();
         // Data Formats
         let offset = (&source[0x8..0xC]).try_into();
-        let offset = offset.map_err(|_| SPBFReaderFormatReadError::InvalidOffset.into())?;
+        let offset = offset.map_err(|_| SPBFReaderDataFormatReadError::InvalidOffset.into())?;
         let mut offset = u32::from_le_bytes(offset) as usize;
         let mut data_format_list = Vec::<SPBFDataFormatForRead>::new();
         while offset != 0 {
-            if source.len() < offset { return Err(SPBFReaderFormatReadError::InvalidOffset.into()) }
+            if source.len() < offset { return Err(SPBFReaderDataFormatReadError::InvalidOffset.into()) }
             let next_offset = (&source[offset..offset + 0x4]).try_into();
             let next_offset = next_offset.map_err(|_| SPBFReaderError::InvalidFileLength)?;
             let next_offset = u32::from_le_bytes(next_offset) as usize;
@@ -38,11 +38,11 @@ impl RawReaderSmallUnalignedLittleEndian {
             let data_id = data_id.map_err(|_| SPBFReaderError::InvalidFileLength)?;
             let data_id = u16::from_le_bytes(data_id);
             let name_end = source[offset + 0x6..].iter().position(|&b| b == 0);
-            let name_end = name_end.ok_or(SPBFReaderFormatReadError::InvalidNameString.into())?;
+            let name_end = name_end.ok_or(SPBFReaderDataFormatReadError::InvalidNameString.into())?;
             let name_end = name_end + 1;
             let name = &source[offset + 0x6..offset + 0x6 + name_end];
             let name = CStr::from_bytes_with_nul(name);
-            let name = name.map_err(|_| SPBFReaderFormatReadError::InvalidNameString.into())?;
+            let name = name.map_err(|_| SPBFReaderDataFormatReadError::InvalidNameString.into())?;
             let name = name.to_string_lossy().into_owned();
             data_format_list.push(SPBFDataFormatForRead::new(data_id, name));
             offset = next_offset;

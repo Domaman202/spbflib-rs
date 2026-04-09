@@ -46,7 +46,7 @@ pub struct SPBFDataForRead<'a> {
 pub enum SPBFReaderError {
     InvalidFileLength,
     Header(SPBFReaderHeaderReadError),
-    DataFormat(SPBFReaderFormatReadError),
+    DataFormat(SPBFReaderDataFormatReadError),
     Data(SPBFReaderDataReadError)
 }
 
@@ -62,7 +62,7 @@ pub enum SPBFReaderHeaderReadError {
 }
 
 #[derive(Debug)]
-pub enum SPBFReaderFormatReadError {
+pub enum SPBFReaderDataFormatReadError {
     InvalidOffset,
     InvalidNameLength,
     InvalidNameString,
@@ -183,7 +183,7 @@ impl Into<SPBFReaderError> for SPBFReaderHeaderReadError {
     }
 }
 
-impl Into<SPBFReaderError> for SPBFReaderFormatReadError {
+impl Into<SPBFReaderError> for SPBFReaderDataFormatReadError {
     fn into(self) -> SPBFReaderError {
         SPBFReaderError::DataFormat(self)
     }

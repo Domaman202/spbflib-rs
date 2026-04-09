@@ -1,5 +1,5 @@
 use crate::raw::align_len_small;
-use crate::read::{SPBFDataForRead, SPBFDataFormatForRead, SPBFReadResult, SPBFReader, SPBFReaderDataReadError, SPBFReaderError, SPBFReaderFormatReadError, SPBFReaderHeaderReadError };
+use crate::read::{SPBFDataForRead, SPBFDataFormatForRead, SPBFReadResult, SPBFReader, SPBFReaderDataReadError, SPBFReaderError, SPBFReaderDataFormatReadError, SPBFReaderHeaderReadError };
 use crate::{SPBFType, SPBFVersion};
 
 pub struct RawReaderSmallAlignedBigEndian;
@@ -29,11 +29,11 @@ impl RawReaderSmallAlignedBigEndian {
         let build_version = build_version.map_err(|_| SPBFReaderHeaderReadError::InvalidBuildNameString.into())?;
         // Data Formats
         let offset = (&source[0x8..0xC]).try_into();
-        let offset = offset.map_err(|_| SPBFReaderFormatReadError::InvalidOffset.into())?;
+        let offset = offset.map_err(|_| SPBFReaderDataFormatReadError::InvalidOffset.into())?;
         let mut offset = u32::from_be_bytes(offset) as usize;
         let mut data_format_list = Vec::<SPBFDataFormatForRead>::new();
         while offset != 0 {
-            if source.len() < offset { return Err(SPBFReaderFormatReadError::InvalidOffset.into()) }
+            if source.len() < offset { return Err(SPBFReaderDataFormatReadError::InvalidOffset.into()) }
             let next_offset = (&source[offset..offset + 0x4]).try_into();
             let next_offset = next_offset.map_err(|_| SPBFReaderError::InvalidFileLength)?;
             let next_offset = u32::from_be_bytes(next_offset) as usize;
@@ -42,14 +42,14 @@ impl RawReaderSmallAlignedBigEndian {
             let name_len = u16::from_be_bytes(name_len) as usize;
             let name_len_unaligned = name_len;
             let name_len = align_len_small(name_len);
-            if source.len() < 0x8 + offset + name_len { return Err(SPBFReaderFormatReadError::InvalidNameLength.into()) }
+            if source.len() < 0x8 + offset + name_len { return Err(SPBFReaderDataFormatReadError::InvalidNameLength.into()) }
             let data_id = (&source[offset + 0x6..offset + 0x8]).try_into();
             let data_id = data_id.map_err(|_| SPBFReaderError::InvalidFileLength)?;
             let data_id = u16::from_be_bytes(data_id);
             let name = &source[offset + 0x8..offset + 0x8 + name_len_unaligned];
             let name = Vec::from(name);
             let name = String::from_utf8(name);
-            let name = name.map_err(|_| SPBFReaderFormatReadError::InvalidNameString.into())?;
+            let name = name.map_err(|_| SPBFReaderDataFormatReadError::InvalidNameString.into())?;
             data_format_list.push(SPBFDataFormatForRead::new(data_id, name));
             offset = next_offset;
         }

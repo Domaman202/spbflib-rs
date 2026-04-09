@@ -56,7 +56,7 @@ impl Into<u8> for SPBFVersion {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use read::{SPBFReader, SPBFReaderError, SPBFReaderFormatReadError, SPBFReaderHeaderReadError };
+    use read::{SPBFReader, SPBFReaderError, SPBFReaderDataFormatReadError, SPBFReaderHeaderReadError };
     use write::{SPBFWriter, SPBFWriterDataAddError, SPBFWriterError, SPBFWriterWriteError };
 
     // Helper: create a writer with some data formats and data blocks
@@ -358,7 +358,7 @@ mod tests {
         let reader = SPBFReader::new(&bytes).unwrap();
         let err = reader.read().unwrap_err();
         match err {
-            SPBFReaderError::DataFormat(SPBFReaderFormatReadError::InvalidOffset) => (),
+            SPBFReaderError::DataFormat(SPBFReaderDataFormatReadError::InvalidOffset) => (),
             _ => panic!("expected InvalidOffset"),
         }
     }

@@ -1,6 +1,6 @@
 [package]
 name = "spbflib"
-version = "1.0.0"
+version = "1.0.1"
 edition = "2024"
 description = "Библиотека для работы с форматом SPBF"
 license = "MIT"
